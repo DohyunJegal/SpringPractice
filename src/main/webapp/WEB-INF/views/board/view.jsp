@@ -41,9 +41,31 @@
          				<h4 class="d-inline me-5">${reply.writer}</h4>
          				<div class="d-inline float-end">
          					<span class="me-3"><fmt:formatDate value="${reply.regDate}" pattern="yy.MM.dd HH:mm" /></span>
+         					<a class="btn btn-primary btn-sm" onclick="reReplyWrite(${reply.rno})" id="reReplyBtn${reply.rno}">답글</a>
          					<c:if test="${reply.writer == member.userName}">
-         						<a class="btn btn-warning btn-sm" onclick="replyModify(${reply.rno})">수정</a>
-         						<a class="btn btn-danger btn-sm" href="/reply/delete?bno=${reply.bno}&rno=${reply.rno}">삭제</a>
+         						<a class="btn btn-warning btn-sm" onclick="replyModify(${reply.rno})" id="replyModifyBtn${reply.rno}">수정</a>				
+         						<!-- Button trigger modal -->
+								<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+								  삭제
+								</button>
+								<!-- Modal -->
+								<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+								    		<div class="modal-header">
+								        		<h5 class="modal-title" id="staticBackdropLabel">댓글 삭제</h5>
+								        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								      		</div>
+								      		<div class="modal-body" align="left">
+								      			정말 삭제하시겠습니까? 삭제 후 복구할 수 없습니다.
+								      		</div>
+								      		<div class="modal-footer">
+								        		<button type="button" class="btn btn-warning" data-bs-dismiss="modal">취소</button>
+								        		<a class="btn btn-danger" href="/reply/delete?bno=${reply.bno}&rno=${reply.rno}">삭제</a>
+								      		</div>
+								    	</div>
+									</div>
+								</div>
          					</c:if>
          				</div>
          			</div>
@@ -73,7 +95,28 @@
   			<a class="btn btn-secondary" href="/board/listPage?num=1">목록</a>
 			<c:if test="${view.writer == member.userName}">
      	 		<a class="btn btn-warning" href="/board/modify?bno=${view.bno}" role="button">수정</a>
-    	  		<a class="btn btn-danger" href="/board/delete?bno=${view.bno}">삭제</a>
+    	  		<!-- Button trigger modal -->
+				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+				  삭제
+				</button>
+				<!-- Modal -->
+				<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+				    		<div class="modal-header">
+				        		<h5 class="modal-title" id="staticBackdropLabel">게시글 삭제</h5>
+				        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      		</div>
+				      		<div class="modal-body" align="left">
+				      			정말 삭제하시겠습니까? 삭제 후 복구할 수 없습니다.
+				      		</div>
+				      		<div class="modal-footer">
+				        		<button type="button" class="btn btn-warning" data-bs-dismiss="modal">취소</button>
+				        		<a class="btn btn-danger" href="/board/delete?bno=${view.bno}">삭제</a>
+				      		</div>
+				    	</div>
+					</div>
+				</div>
 			</c:if>
     	</div>
   	</div>
@@ -82,11 +125,21 @@
   	 		obj.style.height = "1px";
   	  		obj.style.height = (12 + obj.scrollHeight)+"px";
   		}
+  		
   		function replyModify(n) {
-  			var code = "";
+  			reReplyWriteCancle(n);
   			
-  			code += '<form method="post" action="/reply/modify" class="p-3 card">';
-  			code += '	<h4 class="mb-2">댓글 수정</h4>'
+  			var btnCode = '<a class="btn btn-warning btn-sm" onclick="replyModifyCancle(' + n + ')" id="replyModifyCancleBtn' + n + '">취소</a>';
+  			$('#replyModifyBtn' + n).replaceWith(btnCode);
+  			
+  			var code = "";
+  			code += '<form method="post" action="/reply/modify" class="p-3 card" id="replyModify' + n + '">';
+  			code += '	<div class="ms-2 mb-2">'
+  	  		code += '		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-right" viewBox="0 0 16 16">'
+  	  		code += '			<path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>'
+  	  		code += '		</svg>'
+  	  		code += '		<h4 class="ms-1 d-inline-flex">댓글 수정</h4>'
+  	  		code += '	</div>'
   			code += '	<div class="form-floating mb-2">';
   			code += '		<input name="writer" type="text" class="form-control" id="floatingInput" placeholder="name" value="${member.userName}" readonly required>';
   			code += '		<label for="floatingInput">이름</label>';
@@ -96,11 +149,54 @@
   			code += '		<label for="floatingTextarea2">내용</label>';
   			code += '		<input type="hidden" name="bno" value="${view.bno}">';
   			code += '		<input type="hidden" name="rno" value="' + Number(n) + '">';
-  			code += '		<button type="submit" class="btn btn-primary float-end mt-3">수정</button>';
+  			code += '		<button type="submit" class="btn btn-warning float-end mt-3">수정</button>';
   			code += '	</div>';
   			code += '</form>';
-
-  			$('#reply'+n).replaceWith(code);
+  			$('#reply'+n).after(code);
+  		}
+  		function replyModifyCancle(n){
+  			var btnCode = '<a class="btn btn-warning btn-sm" onclick="replyModify(' + n + ')" id="replyModifyBtn' + n + '">수정</a>';
+  			$('#replyModifyCancleBtn'+ n).replaceWith(btnCode);
+  			$('#replyModify' + n).remove();
+  		}
+  		
+  		function reReplyWrite(n) {
+  			replyModifyCancle(n);
+  			 
+  			var btnCode = '<a class="btn btn-primary btn-sm" onclick="reReplyWriteCancle(' + n + ')" id="reReplyCancleBtn' + n + '">취소</a>';
+  			$('#reReplyBtn' + n).replaceWith(btnCode);
+  			
+  			var code = "";
+  			code += '<form method="post" action="" class="p-3 card" id="reReplyWrite' + n + '">';
+  			code += '	<div class="ms-2 mb-2">'
+  			code += '		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-right" viewBox="0 0 16 16">'
+  			code += '			<path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>'
+  			code += '		</svg>'
+  			code += '		<h4 class="ms-1 d-inline-flex">답글 작성</h4>'
+  			code += '	</div>'
+  			code += '	<div class="form-floating mb-2">'
+  			code += '		<c:if test="${errmsg == null}">'
+  			code += '			<input name="writer" type="text" class="form-control" id="floatingInput" placeholder="name" value="${member.userName}" readonly required>'
+  			code += '		</c:if>'
+  			code += '		<c:if test="${errmsg == false}">'
+  			code += '			<input name="writer" type="text" class="form-control" id="floatingInput" placeholder="name" value="익명" readonly required>'	
+  			code += '		</c:if>'
+  			code += '		<label for="floatingInput">이름</label>'
+  			code += '	</div>'
+  			code += '	<div class="form-floating">';
+  			code += '		<textarea name="content" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 100px; resize: none;" onkeydown="resize(this)" onkeyup="resize(this)" autofocus required></textarea>';
+  			code += '		<label for="floatingTextarea2">내용</label>';
+  			code += '		<input type="hidden" name="bno" value="${view.bno}">';
+  			code += '		<input type="hidden" name="rno" value="' + Number(n) + '">';
+  			code += '		<button type="submit" class="btn btn-primary float-end mt-3">작성</button>';
+  			code += '	</div>';
+  			code += '</form>';
+  			$('#reply'+n).after(code);
+  		}
+  		function reReplyWriteCancle(n) {
+  			var btnCode = '<a class="btn btn-primary btn-sm" onclick="reReplyWrite(' + n + ')" id="reReplyBtn' + n + '">답글</a>';
+  			$('#reReplyCancleBtn'+ n).replaceWith(btnCode);
+  			$('#reReplyWrite' + n).remove();
   		}
 	</script>
 	<%-- Bootstrap Bundle with Popper --%>
