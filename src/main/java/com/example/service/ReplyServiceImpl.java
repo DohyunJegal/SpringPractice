@@ -37,4 +37,10 @@ public class ReplyServiceImpl implements ReplyService {
 	public void delete(int rno) throws Exception {
 		dao.delete(rno);
 	}
+	
+	// 마지막 rno값 조회
+	@Override
+	public int getLastrno() throws Exception{
+		return dao.getLastrno();
+	}
 }

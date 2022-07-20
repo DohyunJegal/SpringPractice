@@ -8,7 +8,9 @@ public class ReplyVO {
 	private String writer;
 	private String content;
 	private Date regDate;
-
+	private int parent;
+	private int depth;
+	
 	public int getRno() {
 		return rno;
 	}
@@ -38,5 +40,17 @@ public class ReplyVO {
 	}
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
+	}
+	public int getParent() {
+		return parent;
+	}
+	public void setParent(int parent) {
+		this.parent = parent;
+	}
+	public int getDepth() {
+		return depth;
+	}
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 }

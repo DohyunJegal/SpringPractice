@@ -36,24 +36,33 @@
    		<div class="card mt-3 mb-3">
    			<h4 class="p-3">댓글</h4>
    			<c:forEach items="${reply}" var="reply">
-        		<div id="reply${reply.rno}" class="card">
+   				<c:choose>
+   					<c:when test="${reply.depth != 0}">
+   						<div id="reply${reply.rno}" class="card" style="margin-left:50px;">
+   					</c:when>
+   					<c:otherwise>
+   						<div id="reply${reply.rno}" class="card">
+   					</c:otherwise>
+   				</c:choose>
          			<div class="card-header">
          				<h4 class="d-inline me-5">${reply.writer}</h4>
          				<div class="d-inline float-end">
          					<span class="me-3"><fmt:formatDate value="${reply.regDate}" pattern="yy.MM.dd HH:mm" /></span>
-         					<a class="btn btn-primary btn-sm" onclick="reReplyWrite(${reply.rno})" id="reReplyBtn${reply.rno}">답글</a>
+         					<c:if test="${reply.depth == 0}">
+         						<a class="btn btn-primary btn-sm" onclick="reReplyWrite(${reply.rno})" id="reReplyBtn${reply.rno}">답글</a>
+         					</c:if>
          					<c:if test="${reply.writer == member.userName}">
          						<a class="btn btn-warning btn-sm" onclick="replyModify(${reply.rno})" id="replyModifyBtn${reply.rno}">수정</a>				
          						<!-- Button trigger modal -->
-								<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+								<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop${reply.rno}">
 								  삭제
 								</button>
 								<!-- Modal -->
-								<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+								<div class="modal fade" id="staticBackdrop${reply.rno}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel${reply.rno}" aria-hidden="true">
 									<div class="modal-dialog modal-dialog-centered">
 										<div class="modal-content">
 								    		<div class="modal-header">
-								        		<h5 class="modal-title" id="staticBackdropLabel">댓글 삭제</h5>
+								        		<h5 class="modal-title" id="staticBackdropLabel${reply.rno}">댓글 삭제</h5>
 								        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								      		</div>
 								      		<div class="modal-body" align="left">
@@ -86,6 +95,7 @@
 					<textarea name="content" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 100px; resize: none;" onkeydown="resize(this)" onkeyup="resize(this)" required></textarea>
   					<label for="floatingTextarea2">내용</label>
 					<input type="hidden" name="bno" value="${view.bno}">
+					<input type="hidden" name="depth" value="0">
       				<button type="submit" class="btn btn-primary float-end mt-3">작성</button>
       			</div>
 			</form>
@@ -100,11 +110,11 @@
 				  삭제
 				</button>
 				<!-- Modal -->
-				<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 				    		<div class="modal-header">
-				        		<h5 class="modal-title" id="staticBackdropLabel">게시글 삭제</h5>
+				        		<h5 class="modal-title" id="staticBackdropLabel2">게시글 삭제</h5>
 				        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      		</div>
 				      		<div class="modal-body" align="left">
@@ -167,7 +177,7 @@
   			$('#reReplyBtn' + n).replaceWith(btnCode);
   			
   			var code = "";
-  			code += '<form method="post" action="" class="p-3 card" id="reReplyWrite' + n + '">';
+  			code += '<form method="post" action="/reply/write" class="p-3 card" id="reReplyWrite' + n + '">';
   			code += '	<div class="ms-2 mb-2">'
   			code += '		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-right" viewBox="0 0 16 16">'
   			code += '			<path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>'
@@ -187,7 +197,8 @@
   			code += '		<textarea name="content" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 100px; resize: none;" onkeydown="resize(this)" onkeyup="resize(this)" autofocus required></textarea>';
   			code += '		<label for="floatingTextarea2">내용</label>';
   			code += '		<input type="hidden" name="bno" value="${view.bno}">';
-  			code += '		<input type="hidden" name="rno" value="' + Number(n) + '">';
+  			code += '		<input type="hidden" name="depth" value="1">';
+  			code += '		<input type="hidden" name="parent" value="' + n + '">';
   			code += '		<button type="submit" class="btn btn-primary float-end mt-3">작성</button>';
   			code += '	</div>';
   			code += '</form>';
@@ -198,8 +209,8 @@
   			$('#reReplyCancleBtn'+ n).replaceWith(btnCode);
   			$('#reReplyWrite' + n).remove();
   		}
-	</script>
-	<%-- Bootstrap Bundle with Popper --%>
+  	</script>
+  	<%-- Bootstrap Bundle with Popper --%>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </body>
 

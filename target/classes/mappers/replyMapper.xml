@@ -6,15 +6,17 @@
 	<!-- 댓글 조회 -->
 	<select id="replyList" parameterType="int" resultType="com.example.domain.ReplyVO">
 		select
-			rno, bno, writer, content, regDate
+			rno, bno, writer, content, regDate, parent, depth
 		from reply
-			where bno = #{bno}		
+			where bno = #{bno}
+		ORDER BY
+			parent ASC, rno ASC
 	</select>
 
 	<!-- 댓글 작성 -->
 	<insert id="replyWrite" parameterType="com.example.domain.ReplyVO">
-		insert into reply(bno, writer, content)
-			value(#{bno}, #{writer}, #{content})
+		insert into reply(bno, writer, content, parent, depth)
+			value(#{bno}, #{writer}, #{content}, #{parent}, #{depth})
 	</insert>
 
 	<!-- 댓글 수정 -->
@@ -32,4 +34,9 @@
 			from reply
 		where rno = #{rno}	
 	</delete>
+	
+	<!-- 마지막 rno값 조회 -->
+	<select id="getLastrno" resultType="int">
+		SELECT max(rno) from reply
+	</select>
 </mapper>

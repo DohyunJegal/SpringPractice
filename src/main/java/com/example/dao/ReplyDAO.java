@@ -16,4 +16,7 @@ public interface ReplyDAO {
 
 	// 댓글 삭제
 	public void delete(int rno) throws Exception;
+	
+	// 마지막 rno값 조회
+	public int getLastrno() throws Exception;
 }

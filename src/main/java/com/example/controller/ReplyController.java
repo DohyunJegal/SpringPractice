@@ -13,7 +13,6 @@ import com.example.service.ReplyService;
 @Controller
 @RequestMapping("/reply/*")
 public class ReplyController {
-
 	@Inject
 	private ReplyService replyService;
 
@@ -22,6 +21,10 @@ public class ReplyController {
 	// 댓글 작성
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
 	public String postWrite(ReplyVO vo) throws Exception {
+		if(vo.getParent() == 0) {
+			vo.setParent(replyService.getLastrno() + 1);
+		}
+		
 		replyService.write(vo);
 		return "redirect:/board/view?bno=" + vo.getBno();
 	}

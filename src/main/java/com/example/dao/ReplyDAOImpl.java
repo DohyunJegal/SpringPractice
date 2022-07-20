@@ -41,4 +41,9 @@ public class ReplyDAOImpl implements ReplyDAO {
 		sql.delete(namespace + ".replyDelete", rno);
 	}
 
+	// 마지막 rno값 조회
+	@Override
+	public int getLastrno() throws Exception {
+		return sql.selectOne(namespace + ".getLastrno", null);
+	}
 }
