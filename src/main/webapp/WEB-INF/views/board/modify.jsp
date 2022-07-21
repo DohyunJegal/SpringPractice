@@ -27,7 +27,7 @@
 	</div>
 	<div class="container mt-3">
 		<h3 class="mb-3">게시글 작성</h3>
-		<form method="post">
+		<form method="post" enctype="multipart/form-data">
 			<div class="row g-2 mb-3">
 				<div class="col-8">
 					<div class="form-floating">

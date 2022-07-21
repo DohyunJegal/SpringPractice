@@ -78,7 +78,7 @@
          					</c:if>
          				</div>
          			</div>
-         			<div class="card-body">${reply.content}</div>
+         			<div class="card-body" style="white-space: pre-wrap;">${reply.content}</div>
           		</div>
         	</c:forEach>
       		<form method="post" action="/reply/write" class="p-3 card">
