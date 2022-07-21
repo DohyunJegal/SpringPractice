@@ -6,10 +6,17 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <title>게시물 조회</title>
-  <%-- Bootstrap CSS --%>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  	<meta charset="UTF-8">
+  	<title>게시물 조회</title>
+  	<%-- Bootstrap CSS --%>
+  	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+	<style>
+		pre {
+			background-color: rgb(238, 238, 238);
+			border-radius: 4px 20px;
+			padding: 20px;
+		}
+	</style>
 </head>
 
 <body>
