@@ -30,7 +30,7 @@
   					<span class="me-2"><fmt:formatDate value="${view.regDate}" pattern="yy.MM.dd HH:mm" /></span>
   				</div>
   			</div>
-  			<div class="card-body" style="white-space: pre-wrap;">${view.content}</div>
+  			<div class="card-body"><div>${view.content}</div></div>
   		</div>
    		<!-- Reply -->
    		<div class="card mt-3 mb-3">
@@ -78,7 +78,7 @@
          					</c:if>
          				</div>
          			</div>
-         			<div class="card-body" style="white-space: pre-wrap;">${reply.content}</div>
+         			<div class="card-body">${reply.content}</div>
           		</div>
         	</c:forEach>
       		<form method="post" action="/reply/write" class="p-3 card">

@@ -8,8 +8,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>게시물 수정</title>
+	
+	<%-- CKEditor --%>
+	<script src="/resources/ckeditor5/build/ckeditor.js"></script>​
 	<%-- Bootstrap CSS --%>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+	<style>
+		.ck-editor__editable {
+			height: 700px;
+		}
+	</style>
 </head>
 
 <body>
@@ -33,9 +42,31 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-floating">
-				<textarea name="content" class="form-control" id="floatingInputContent" placeholder="content" style="height: 500px" required>${view.content}</textarea>
-				<label for="floatingInputContent">내용</label>
+			<div>
+				<textarea name="content" id="InputContent" placeholder="내용을 입력하세요.">${view.content}</textarea>
+				<script>
+					ClassicEditor
+						.create( document.querySelector( '#InputContent' ), {
+							mediaEmbed: {
+						        previewsInData: true
+						    },
+						    removePlugins: ["MediaEmbedToolbar"],
+						    simpleUpload: {
+			                    uploadUrl: "/upload/image",
+			                    withCredentials: true,
+			                    headers: {
+			                        'X-CSRF-TOKEN': 'CSFR-Token',
+			                        Authorization: 'Bearer <JSON Web Token>'
+			                      }
+			                }
+						} )
+						.then( editor => {
+							console.log( 'Editor was initialized', editor );
+						} )
+						.catch( error => {
+							console.error( error.stack );
+						} );
+				</script>
 			</div>
 			<button type="submit" class="btn btn-primary float-end mt-3">제출</button>
 		</form>
