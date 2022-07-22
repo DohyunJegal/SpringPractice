@@ -61,8 +61,8 @@
 			                    headers: {
 			                        'X-CSRF-TOKEN': 'CSFR-Token',
 			                        Authorization: 'Bearer <JSON Web Token>'
-			                      }
-			                }
+			                    }
+						    }
 						} )
 						.then( editor => {
 							console.log( 'Editor was initialized', editor );

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.dao.BoardDAO;
 import com.example.domain.BoardVO;
 import com.example.domain.Page;
 import com.example.domain.ReplyVO;
